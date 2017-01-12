@@ -40,7 +40,7 @@ class WP_DocumentCloud {
 		// Check for conflicts with other DocumentCloud plugins.
 		// Not needed on WordPress VIP since no other DocumentCloud plugins exist.
 		if ( ! defined( 'WPCOM_IS_VIP_ENV' ) || ! WPCOM_IS_VIP_ENV ) {
-			add_action( 'admin_init', array( $this, 'check_dc_plugin_conflict') );
+			add_action( 'admin_init', array( $this, 'check_dc_plugin_conflict' ) );
 		}
 
 		// Register the oEmbed provider
@@ -110,7 +110,7 @@ class WP_DocumentCloud {
 		$oembed_resource_domain = apply_filters( 'documentcloud_oembed_resource_domain', WP_DocumentCloud::OEMBED_RESOURCE_DOMAIN );
 		$oembed_provider = apply_filters( 'documentcloud_oembed_provider', WP_DocumentCloud::OEMBED_PROVIDER );
 
-		wp_oembed_add_provider( 'http://'  . $oembed_resource_domain . '/documents/*', $oembed_provider );
+		wp_oembed_add_provider( 'http://' . $oembed_resource_domain . '/documents/*', $oembed_provider );
 		wp_oembed_add_provider( 'https://' . $oembed_resource_domain . '/documents/*', $oembed_provider );
 	}
 
@@ -126,7 +126,7 @@ class WP_DocumentCloud {
 		$width		= intval( get_option( 'documentcloud_default_width', $wp_embed_defaults['width'] ) );
 		$full_width	= intval( get_option( 'documentcloud_full_width', WP_DocumentCloud::DEFAULT_EMBED_FULL_WIDTH ) );
 
-		return array (
+		return array(
 			'height'		=> $height,
 			'width'			=> $width,
 			'full_width'	=> $full_width,
@@ -178,10 +178,10 @@ class WP_DocumentCloud {
 	 * @return string
 	 */
 	function prepare_oembed_fetch( $provider, $url, $args ) {
-        // Merge actual args with default attributes so that defaults are always
-        // sent to oEmbed endpoint
-        $default_atts = $this->get_default_atts();
-        $atts         = array_merge( $default_atts, $args );
+		// Merge actual args with default attributes so that defaults are always
+		// sent to oEmbed endpoint
+		$default_atts = $this->get_default_atts();
+		$atts = array_merge( $default_atts, $args );
 
 		// Clean and prepare arguments
 		foreach ( $atts as $key => $value ) {
@@ -233,9 +233,8 @@ class WP_DocumentCloud {
 		if ( empty( $atts['url'] ) ) {
 			if ( empty( $atts['id'] ) ) {
 				return '';
-			}
-			else {
-				$url = $filtered_atts['url'] = "https://" . WP_DocumentCloud::OEMBED_RESOURCE_DOMAIN . "/documents/{$atts['id']}.html";
+			} else {
+				$url = $filtered_atts['url'] = 'https://' . WP_DocumentCloud::OEMBED_RESOURCE_DOMAIN . "/documents/{$atts['id']}.html";
 			}
 		}
 
@@ -321,8 +320,7 @@ class WP_DocumentCloud {
 			$url = "{$elements['protocol']}://" . WP_DocumentCloud::OEMBED_RESOURCE_DOMAIN . "/documents/{$elements['document_slug']}";
 			if ( isset( $elements['page_number'] ) ) {
 				$url .= "/pages/{$elements['page_number']}";
-			}
-			else if ( isset( $elements['note_id'] ) ) {
+			} elseif ( isset( $elements['note_id'] ) ) {
 				$url .= "/annotations/{$elements['note_id']}";
 			}
 			$url .= '.html';
@@ -441,13 +439,13 @@ class WP_DocumentCloud {
 			$wide_assets = get_post_meta( $post_id, 'wide_assets', true );
 			$matches = array();
 
-			preg_match_all( '/'.get_shortcode_regex().'/', $post->post_content, $matches );
+			preg_match_all( '/' . get_shortcode_regex() . '/', $post->post_content, $matches );
 			$tags = isset( $matches[2] ) ? $matches[2] : array();
 			$args = isset( $matches[3] ) ? $matches[3] : array();
 			if ( ! empty( $tags ) && is_array( $tags ) ) {
-				foreach( $tags as $i => $tag ) {
+				foreach ( $tags as $i => $tag ) {
 					if ( 'documentcloud' == $tag ) {
-						$parsed_atts = shortcode_parse_atts( $args[$i] );
+						$parsed_atts = shortcode_parse_atts( $args[ $i ] );
 						$atts = shortcode_atts( $default_atts, $parsed_atts );
 
 						// Get a doc id to keep array keys consistent
@@ -457,12 +455,11 @@ class WP_DocumentCloud {
 								$meta_key = $elements['document_slug'];
 								if ( isset( $elements['page_number'] ) ) {
 									$meta_key .= "-p{$elements['page_number']}";
-								}
-								else if ( isset( $elements['note_id'] ) ) {
+								} elseif ( isset( $elements['note_id'] ) ) {
 									$meta_key .= "-a{$elements['note_id']}";
 								}
 							}
-						} else if ( isset( $atts['id'] ) ) {
+						} elseif ( isset( $atts['id'] ) ) {
 							$meta_key = $atts['id'];
 						}
 
